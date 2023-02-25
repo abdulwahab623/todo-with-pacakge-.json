@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+        integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+    <title>tttttttt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            text-transform: capitalize;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #ff0 50%, #333 50%);
+        }
+
+        .container {
+            height: 420px;
+            width: 430px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            overflow-y: auto;
+            /* is will add scroll in y axis if we dont use this content will go out of div 
+             The overflow-y property specifies whether to clip the content,
+            add a scroll bar,
+            or display overflow content of a block-level element,
+            when it overflows at the top and bottom edges. */
+        }
+
+        #input {
+            height: 50px;
+            width: 100%;
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            background: #666;
+            color: #fff;
+            padding: 0 10px;
+            margin: 15px 0;
+        }
+
+        #input::placeholder {
+            color: #bbb;
+        }
+
+        ul li {
+            background: #eee;
+            color: #333;
+            height: 40px;
+            border-radius: 50px;
+            margin: 5px 0;
+            padding: 10px;
+            position: relative;
+            list-style-type: none;
+        }
+
+        ul .fa-check,
+        .fa-trash {
+            position: absolute;
+            cursor: pointer;
+        }
+
+        ul .fa-check {
+            padding: 0 10px;
+            right: 30px;
+            color: rgb(6, 215, 6);
+        }
+
+        ul .fa-trash {
+            right: 15px;
+            color: #ff0000;
+        }
+
+        ul .checked {
+            background: rgb(124, 243, 124);
+            text-decoration: line-through;
+            transition: .2s;
+        }
+
+        .btn {
+            margin: 10px 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <form id="postForm" action="http://localhost:8080/data">
+            <input type="text" class="form-control" id="inputt" placeholder="Press enter to add">
+            <button type="submit" class="btn btn-success" value="Submit">Submit</button>
+
+        </form>
+
+        <ul id="users"></ul>
+    </div>
+    <script src="jquery.js" charset="utf-8"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $.getJSON('http://localhost:8080/data', function (data) {
+                $.each(data, function (i, user) {
+                    $('ul#users').append('<li>' + user.title + '<i class="fas fa-check"></i>  </li>')
+                })
+            })
+
+            $('ul').on('click', '.fa-check', function () {
+                $(this).parent('li').toggleClass('checked')
+            });
+            // $('ul').on('click', '.fa-trash', function () {
+            //     $(this).parent('li').hide()
+            // })
+
+
+            $('#postForm').submit(function (e) {
+                e.preventDefault();
+                //get input field val 
+                var input = $('#inputt').val();
+                //making ajax call after this received input data
+                var url = $(this).attr('action');
+                $.post(url,
+                    {
+                        title: input,
+                    }).done(function (data) {
+                        console.log('post Saved');
+                        console.log(data);
+                    })
+            });
+
+        })
+//npm init
+//create db.json file
+//npm install --save json-server
+//npx json-server --watch db.json --port 8080
+    </script>
+</body>
+
+</html>
